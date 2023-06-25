@@ -1,5 +1,6 @@
 package TicketPortal.dao;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -43,8 +44,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         seedCompras();
         seedItemCompras();
         seedEventos();
-        seedIngressos();
         seedTiposIngresso();
+        seedIngressos();
     }
 
     private void seedUsuarios() {
@@ -70,6 +71,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         for (long i = 1; i <= 20; i++) {
             ItemCompra itemCompra = new ItemCompra();
             Compra compra = compraRepository.findById(i).orElseThrow();
+            System.out.println(compra.getIdCompra());
             itemCompra.setCompra(compra);
             // Set other properties
             itemCompraRepository.save(itemCompra);
@@ -86,6 +88,16 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
     }
 
+    private void seedTiposIngresso() {
+        for (long i = 1; i <= 20; i++) {
+            TipoIngresso tipoIngresso = new TipoIngresso();
+            Evento evento = eventoRepository.findById(i).orElseThrow();
+            tipoIngresso.setEvento(evento);
+            // Set other properties
+            tipoIngressoRepository.save(tipoIngresso);
+        }
+    }
+    
     private void seedIngressos() {
         for (long i = 1; i <= 20; i++) {
             Ingresso ingresso = new Ingresso();
@@ -98,15 +110,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
     }
 
-    private void seedTiposIngresso() {
-        for (long i = 1; i <= 20; i++) {
-            TipoIngresso tipoIngresso = new TipoIngresso();
-            Evento evento = eventoRepository.findById(i).orElseThrow();
-            tipoIngresso.setEvento(evento);
-            // Set other properties
-            tipoIngressoRepository.save(tipoIngresso);
-        }
-    }
+
 }
 
 
