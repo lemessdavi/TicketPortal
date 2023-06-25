@@ -9,69 +9,54 @@ import TicketPortal.dao.IngressoRepository;
 import TicketPortal.models.Ingresso;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/ingressos")
 public class IngressoController {
 
-    private final IngressoRepository ingressoRepository;
-
     @Autowired
-    public IngressoController(IngressoRepository ingressoRepository) {
-        this.ingressoRepository = ingressoRepository;
-    }
+    private IngressoRepository ingressoRepository;
 
-    // Create
-    @PostMapping
-    public ResponseEntity<Ingresso> criarIngresso(@RequestBody Ingresso ingresso) {
-        Ingresso novoIngresso = ingressoRepository.save(ingresso);
-        return new ResponseEntity<>(novoIngresso, HttpStatus.CREATED);
-    }
-
-    // Read all
     @GetMapping
-    public ResponseEntity<List<Ingresso>> listarIngressos() {
-        List<Ingresso> ingressos = ingressoRepository.findAll();
-        return new ResponseEntity<>(ingressos, HttpStatus.OK);
+    public List<Ingresso> getAllIngressos() {
+        return ingressoRepository.findAll();
     }
 
-    // Read one
     @GetMapping("/{id}")
-    public ResponseEntity<Ingresso> buscarIngressoPorId(@PathVariable("id") Long id) {
-        Optional<Ingresso> ingressoOptional = ingressoRepository.findById(id);
-        if (ingressoOptional.isPresent()) {
-            return new ResponseEntity<>(ingressoOptional.get(), HttpStatus.OK);
+    public ResponseEntity<Ingresso> getIngressoById(@PathVariable("id") Long id) {
+        Ingresso ingresso = ingressoRepository.findById(id).orElse(null);
+        if (ingresso != null) {
+            return new ResponseEntity<>(ingresso, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Update
+    @PostMapping
+    public ResponseEntity<Ingresso> createIngresso(@RequestBody Ingresso ingresso) {
+        Ingresso createdIngresso = ingressoRepository.save(ingresso);
+        return new ResponseEntity<>(createdIngresso, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Ingresso> atualizarIngresso(@PathVariable("id") Long id, @RequestBody Ingresso ingressoAtualizado) {
-        Optional<Ingresso> ingressoOptional = ingressoRepository.findById(id);
-        if (ingressoOptional.isPresent()) {
-            Ingresso ingressoExistente = ingressoOptional.get();
-            ingressoExistente.setEvento(ingressoAtualizado.getEvento());
-            ingressoExistente.setTipoPromocao(ingressoAtualizado.getTipoPromocao());
+    public ResponseEntity<Ingresso> updateIngresso(@PathVariable("id") Long id, @RequestBody Ingresso ingresso) {
+        Ingresso existingIngresso = ingressoRepository.findById(id).orElse(null);
+        if (existingIngresso != null) {
+            existingIngresso.setTipoPromocao(ingresso.getTipoPromocao());
+            existingIngresso.setItemCompra(ingresso.getItemCompra());
 
-            Ingresso ingressoAtualizadoDB = ingressoRepository.save(ingressoExistente);
-            return new ResponseEntity<>(ingressoAtualizadoDB, HttpStatus.OK);
+            Ingresso updatedIngresso = ingressoRepository.save(existingIngresso);
+            return new ResponseEntity<>(updatedIngresso, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> excluirIngresso(@PathVariable("id") Long id) {
-        Optional<Ingresso> ingressoOptional = ingressoRepository.findById(id);
-        if (ingressoOptional.isPresent()) {
-            ingressoRepository.delete(ingressoOptional.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HttpStatus> deleteIngresso(@PathVariable("id") Long id) {
+        ingressoRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
+

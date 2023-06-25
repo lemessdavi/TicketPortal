@@ -12,67 +12,56 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/tipos-ingresso")
+@RequestMapping("/tipo-ingressos")
 public class TipoIngressoController {
 
-    private final TipoIngressoRepository tipoIngressoRepository;
-
     @Autowired
-    public TipoIngressoController(TipoIngressoRepository tipoIngressoRepository) {
-        this.tipoIngressoRepository = tipoIngressoRepository;
-    }
+    private TipoIngressoRepository tipoIngressoRepository;
 
-    // Create
-    @PostMapping
-    public ResponseEntity<TipoIngresso> criarTipoIngresso(@RequestBody TipoIngresso tipoIngresso) {
-        TipoIngresso novoTipoIngresso = tipoIngressoRepository.save(tipoIngresso);
-        return new ResponseEntity<>(novoTipoIngresso, HttpStatus.CREATED);
-    }
-
-    // Read all
     @GetMapping
-    public ResponseEntity<List<TipoIngresso>> listarTiposIngresso() {
-        List<TipoIngresso> tiposIngresso = tipoIngressoRepository.findAll();
-        return new ResponseEntity<>(tiposIngresso, HttpStatus.OK);
+    public List<TipoIngresso> getAllTipoIngressos() {
+        return tipoIngressoRepository.findAll();
     }
 
-    // Read one
     @GetMapping("/{id}")
-    public ResponseEntity<TipoIngresso> buscarTipoIngressoPorId(@PathVariable("id") Long id) {
-        Optional<TipoIngresso> tipoIngressoOptional = tipoIngressoRepository.findById(id);
-        if (tipoIngressoOptional.isPresent()) {
-            return new ResponseEntity<>(tipoIngressoOptional.get(), HttpStatus.OK);
+    public ResponseEntity<TipoIngresso> getTipoIngressoById(@PathVariable("id") Long id) {
+        TipoIngresso tipoIngresso = tipoIngressoRepository.findById(id).orElse(null);
+        if (tipoIngresso != null) {
+            return new ResponseEntity<>(tipoIngresso, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Update
+    @PostMapping
+    public ResponseEntity<TipoIngresso> createTipoIngresso(@RequestBody TipoIngresso tipoIngresso) {
+        TipoIngresso createdTipoIngresso = tipoIngressoRepository.save(tipoIngresso);
+        return new ResponseEntity<>(createdTipoIngresso, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<TipoIngresso> atualizarTipoIngresso(@PathVariable("id") Long id, @RequestBody TipoIngresso tipoIngressoAtualizado) {
-        Optional<TipoIngresso> tipoIngressoOptional = tipoIngressoRepository.findById(id);
-        if (tipoIngressoOptional.isPresent()) {
-            TipoIngresso tipoIngressoExistente = tipoIngressoOptional.get();
-            tipoIngressoExistente.setValorNormal(tipoIngressoAtualizado.getValorNormal());
-            tipoIngressoExistente.setDesconto(tipoIngressoAtualizado.getDesconto());
-            tipoIngressoExistente.setLote(tipoIngressoAtualizado.getLote());
+    public ResponseEntity<TipoIngresso> updateTipoIngresso(@PathVariable("id") Long id, @RequestBody TipoIngresso tipoIngresso) {
+        TipoIngresso existingTipoIngresso = tipoIngressoRepository.findById(id).orElse(null);
+        if (existingTipoIngresso != null) {
+            existingTipoIngresso.setEvento(tipoIngresso.getEvento());
+            existingTipoIngresso.setTitulo(tipoIngresso.getTitulo());
+            existingTipoIngresso.setValorNormal(tipoIngresso.getValorNormal());
+            existingTipoIngresso.setQuantidade(tipoIngresso.getQuantidade());
+            existingTipoIngresso.setDesconto(tipoIngresso.getDesconto());
+            existingTipoIngresso.setLoteNumero(tipoIngresso.getLoteNumero());
 
-            TipoIngresso tipoIngressoAtualizadoDB = tipoIngressoRepository.save(tipoIngressoExistente);
-            return new ResponseEntity<>(tipoIngressoAtualizadoDB, HttpStatus.OK);
+            TipoIngresso updatedTipoIngresso = tipoIngressoRepository.save(existingTipoIngresso);
+            return new ResponseEntity<>(updatedTipoIngresso, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> excluirTipoIngresso(@PathVariable("id") Long id) {
-        Optional<TipoIngresso> tipoIngressoOptional = tipoIngressoRepository.findById(id);
-        if (tipoIngressoOptional.isPresent()) {
-            tipoIngressoRepository.delete(tipoIngressoOptional.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HttpStatus> deleteTipoIngresso(@PathVariable("id") Long id) {
+        tipoIngressoRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
+

@@ -9,72 +9,59 @@ import TicketPortal.dao.UsuarioRepository;
 import TicketPortal.models.Usuario;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-    
-    private final UsuarioRepository usuarioRepository;
-    
+
     @Autowired
-    public UsuarioController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
-    
-    // Create
-    @PostMapping
-    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-        Usuario novoUsuario = usuarioRepository.save(usuario);
-        return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
-    }
-    
-    // Read all
+    private UsuarioRepository usuarioRepository;
+
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
-        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+    public List<Usuario> getAllUsuarios() {
+        return usuarioRepository.findAll();
     }
-    
-    // Read one
+    	
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if (usuarioOptional.isPresent()) {
-            return new ResponseEntity<>(usuarioOptional.get(), HttpStatus.OK);
+    public ResponseEntity<Usuario> getUsuarioById(@PathVariable("id") Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario != null) {
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
-    // Update
+
+    @PostMapping
+    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
+        Usuario createdUsuario = usuarioRepository.save(usuario);
+        return new ResponseEntity<>(createdUsuario, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable("id") Long id, @RequestBody Usuario usuarioAtualizado) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if (usuarioOptional.isPresent()) {
-            Usuario usuarioExistente = usuarioOptional.get();
-            usuarioExistente.setNome(usuarioAtualizado.getNome());
-            usuarioExistente.setDocumento(usuarioAtualizado.getDocumento());
-            usuarioExistente.setEmail(usuarioAtualizado.getEmail());
-            usuarioExistente.setTelefone(usuarioAtualizado.getTelefone());
-            usuarioExistente.setEndereco(usuarioAtualizado.getEndereco());
-            
-            Usuario usuarioAtualizadoDB = usuarioRepository.save(usuarioExistente);
-            return new ResponseEntity<>(usuarioAtualizadoDB, HttpStatus.OK);
+    public ResponseEntity<Usuario> updateUsuario(@PathVariable("id") Long id, @RequestBody Usuario usuario) {
+        Usuario existingUsuario = usuarioRepository.findById(id).orElse(null);
+        if (existingUsuario != null) {
+            existingUsuario.setNome(usuario.getNome());
+            existingUsuario.setDocumento(usuario.getDocumento());
+            existingUsuario.setUsername(usuario.getUsername());
+            existingUsuario.setTelefone(usuario.getTelefone());
+            existingUsuario.setEndereco(usuario.getEndereco());
+            existingUsuario.setTipo(usuario.getTipo());
+            existingUsuario.setPassword(usuario.getPassword());
+
+            Usuario updatedUsuario = usuarioRepository.save(existingUsuario);
+            return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
-    // Delete
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> excluirUsuario(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if (usuarioOptional.isPresent()) {
-            usuarioRepository.delete(usuarioOptional.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HttpStatus> deleteUsuario(@PathVariable("id") Long id) {
+        usuarioRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
+

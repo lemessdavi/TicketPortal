@@ -1,65 +1,56 @@
 package TicketPortal.models;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "item_compra")
 public class ItemCompra {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idItem;
+    @Column(name = "id_item_compra")
+    private Long idItemCompra;
 
     @ManyToOne
+    @JoinColumn(name = "id_compra")
     private Compra compra;
 
-    @ManyToOne
-    private Ingresso ingresso;
-
+    @Column(name = "quantidade")
     private Integer quantidade;
+
+    @Column(name = "valor_item")
     private Double valorItem;
 
-    // Getters and Setters
+	public Long getIdItemCompra() {
+		return idItemCompra;
+	}
 
-    public Long getIdItem() {
-        return idItem;
-    }
+	public void setIdItemCompra(Long idItemCompra) {
+		this.idItemCompra = idItemCompra;
+	}
 
-    public void setIdItem(Long idItem) {
-        this.idItem = idItem;
-    }
+	public Compra getCompra() {
+		return compra;
+	}
 
-    public Compra getCompra() {
-        return compra;
-    }
+	public void setCompra(Compra compra) {
+		this.compra = compra;
+	}
 
-    public void setCompra(Compra compra) {
-        this.compra = compra;
-    }
+	public Integer getQuantidade() {
+		return quantidade;
+	}
 
-    public Ingresso getIngresso() {
-        return ingresso;
-    }
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
 
-    public void setIngresso(Ingresso ingresso) {
-        this.ingresso = ingresso;
-    }
+	public Double getValorItem() {
+		return valorItem;
+	}
 
-    public Integer getQuantidade() {
-        return quantidade;
-    }
+	public void setValorItem(Double valorItem) {
+		this.valorItem = valorItem;
+	}
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public Double getValorItem() {
-        return valorItem;
-    }
-
-    public void setValorItem(Double valorItem) {
-        this.valorItem = valorItem;
-    }
+    
 }

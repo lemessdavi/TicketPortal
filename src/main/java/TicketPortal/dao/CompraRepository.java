@@ -7,6 +7,7 @@ import TicketPortal.models.Compra;
 
 @Repository
 public interface CompraRepository extends JpaRepository<Compra, Long> {
-    // Você pode adicionar métodos personalizados de consulta aqui, se necessário
+
 }
+
 

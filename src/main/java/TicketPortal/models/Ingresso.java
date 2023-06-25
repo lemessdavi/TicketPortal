@@ -5,42 +5,50 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "ingresso")
 public class Ingresso {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_ingresso")
     private Long idIngresso;
 
     @ManyToOne
-    private Evento evento;
+    @JoinColumn(name = "id_tipo_promocao")
+    private TipoIngresso tipoPromocao;
 
     @ManyToOne
-    private TipoIngresso tipoIngresso;
+    @JoinColumn(name = "id_item_compra")
+    private ItemCompra itemCompra;
 
-    // Getters and Setters
+	public Long getIdIngresso() {
+		return idIngresso;
+	}
 
-    public Long getIdIngresso() {
-        return idIngresso;
-    }
+	public void setIdIngresso(Long idIngresso) {
+		this.idIngresso = idIngresso;
+	}
 
-    public void setIdIngresso(Long idIngresso) {
-        this.idIngresso = idIngresso;
-    }
+	public TipoIngresso getTipoPromocao() {
+		return tipoPromocao;
+	}
 
-    public Evento getEvento() {
-        return evento;
-    }
+	public void setTipoPromocao(TipoIngresso tipoPromocao) {
+		this.tipoPromocao = tipoPromocao;
+	}
 
-    public void setEvento(Evento evento) {
-        this.evento = evento;
-    }
+	public ItemCompra getItemCompra() {
+		return itemCompra;
+	}
 
-    public TipoIngresso getTipoPromocao() {
-        return tipoIngresso;
-    }
+	public void setItemCompra(ItemCompra itemCompra) {
+		this.itemCompra = itemCompra;
+	}
 
-    public void setTipoPromocao(TipoIngresso tipoIngresso) {
-        this.tipoIngresso = tipoIngresso;
-    }
+
+    
 }
+

@@ -9,72 +9,58 @@ import TicketPortal.dao.EventoRepository;
 import TicketPortal.models.Evento;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/eventos")
 public class EventoController {
 
-    private final EventoRepository eventoRepository;
-
     @Autowired
-    public EventoController(EventoRepository eventoRepository) {
-        this.eventoRepository = eventoRepository;
-    }
+    private EventoRepository eventoRepository;
 
-    // Create
-    @PostMapping
-    public ResponseEntity<Evento> criarEvento(@RequestBody Evento evento) {
-        Evento novoEvento = eventoRepository.save(evento);
-        return new ResponseEntity<>(novoEvento, HttpStatus.CREATED);
-    }
-
-    // Read all
     @GetMapping
-    public ResponseEntity<List<Evento>> listarEventos() {
-        List<Evento> eventos = eventoRepository.findAll();
-        return new ResponseEntity<>(eventos, HttpStatus.OK);
+    public List<Evento> getAllEventos() {
+        return eventoRepository.findAll();
     }
 
-    // Read one
     @GetMapping("/{id}")
-    public ResponseEntity<Evento> buscarEventoPorId(@PathVariable("id") Long id) {
-        Optional<Evento> eventoOptional = eventoRepository.findById(id);
-        if (eventoOptional.isPresent()) {
-            return new ResponseEntity<>(eventoOptional.get(), HttpStatus.OK);
+    public ResponseEntity<Evento> getEventoById(@PathVariable("id") Long id) {
+        Evento evento = eventoRepository.findById(id).orElse(null);
+        if (evento != null) {
+            return new ResponseEntity<>(evento, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Update
+    @PostMapping
+    public ResponseEntity<Evento> createEvento(@RequestBody Evento evento) {
+        Evento createdEvento = eventoRepository.save(evento);
+        return new ResponseEntity<>(createdEvento, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Evento> atualizarEvento(@PathVariable("id") Long id, @RequestBody Evento eventoAtualizado) {
-        Optional<Evento> eventoOptional = eventoRepository.findById(id);
-        if (eventoOptional.isPresent()) {
-            Evento eventoExistente = eventoOptional.get();
-            eventoExistente.setUsuario(eventoAtualizado.getUsuario());
-            eventoExistente.setDataEvento(eventoAtualizado.getDataEvento());
-            eventoExistente.setTitulo(eventoAtualizado.getTitulo());
-            eventoExistente.setDescricao(eventoAtualizado.getDescricao());
-            eventoExistente.setLocal(eventoAtualizado.getLocal());
+    public ResponseEntity<Evento> updateEvento(@PathVariable("id") Long id, @RequestBody Evento evento) {
+        Evento existingEvento = eventoRepository.findById(id).orElse(null);
+        if (existingEvento != null) {
+            existingEvento.setUsuario(evento.getUsuario());
+            existingEvento.setDataEvento(evento.getDataEvento());
+            existingEvento.setTitulo(evento.getTitulo());
+            existingEvento.setDescricao(evento.getDescricao());
+            existingEvento.setLocal(evento.getLocal());
+            existingEvento.setImagemPath(evento.getImagemPath());
 
-            Evento eventoAtualizadoDB = eventoRepository.save(eventoExistente);
-            return new ResponseEntity<>(eventoAtualizadoDB, HttpStatus.OK);
+            Evento updatedEvento = eventoRepository.save(existingEvento);
+            return new ResponseEntity<>(updatedEvento, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> excluirEvento(@PathVariable("id") Long id) {
-        Optional<Evento> eventoOptional = eventoRepository.findById(id);
-        if (eventoOptional.isPresent()) {
-            eventoRepository.delete(eventoOptional.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HttpStatus> deleteEvento(@PathVariable("id") Long id) {
+        eventoRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
+
