@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import TicketPortal.dao.TipoIngressoRepository;
+import TicketPortal.models.Evento;
 import TicketPortal.models.TipoIngresso;
 
 import java.util.List;
@@ -62,6 +63,11 @@ public class TipoIngressoController {
         tipoIngressoRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    
+    //@GetMapping("/evento")
+    //public List<TipoIngresso> getTipoIngressoByEvento(@RequestBody Evento evento) {
+    //	return tipoIngressoRepository.findByEvento(evento).orElse(null);
+    //}
 
 }
 

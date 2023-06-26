@@ -62,6 +62,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             Compra compra = new Compra();
             Usuario usuario = usuarioRepository.findById(i).orElseThrow();
             compra.setUsuario(usuario);
+            compra.setValorTotal((double) i);
             // Set other properties
             compraRepository.save(compra);
         }

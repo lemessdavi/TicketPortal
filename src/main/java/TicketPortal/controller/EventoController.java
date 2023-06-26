@@ -34,6 +34,7 @@ public class EventoController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
     public ResponseEntity<Evento> createEvento(@RequestBody Evento evento) {
         Evento createdEvento = eventoRepository.save(evento);
