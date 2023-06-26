@@ -1,38 +1,41 @@
 package TicketPortal.models;
 
+import java.util.Collection;
 
 import javax.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class Usuario implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
-    private Long idUsuario;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_usuario")
+	private Long idUsuario;
 
-    @Column(name = "nome")
-    private String nome;
+	@Column(name = "nome")
+	private String nome;
 
-    @Column(name = "documento")
-    private String documento;
+	@Column(name = "documento")
+	private String documento;
 
-    @Column(name = "username")
-    private String username;
+	@Column(name = "username")
+	private String username;
 
-    @Column(name = "telefone")
-    private String telefone;
+	@Column(name = "telefone")
+	private String telefone;
 
-    @Column(name = "endereco")
-    private String endereco;
+	@Column(name = "endereco")
+	private String endereco;
 
-    @Column(name = "tipo")
-    private Integer tipo;
+	@Column(name = "tipo")
+	private Integer tipo;
 
-    @Column(name = "password")
-    private String password;
+	@Column(name = "password")
+	private String password;
 
 	public Long getIdUsuario() {
 		return idUsuario;
@@ -77,14 +80,6 @@ public class Usuario {
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
-	
-	public String getPassword() {
-		return password;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
 
 	public Integer getTipo() {
 		return tipo;
@@ -98,5 +93,39 @@ public class Usuario {
 		this.password = password;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
 }

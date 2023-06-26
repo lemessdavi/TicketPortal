@@ -73,7 +73,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             Compra compra = compraRepository.findById(i).orElseThrow();
             System.out.println(compra.getIdCompra());
             itemCompra.setCompra(compra);
-            // Set other properties
+            // Set other propertie
             itemCompraRepository.save(itemCompra);
         }
     }

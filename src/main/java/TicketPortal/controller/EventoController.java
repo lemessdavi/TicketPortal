@@ -10,6 +10,8 @@ import TicketPortal.models.Evento;
 
 import java.util.List;
 
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/eventos")
 public class EventoController {

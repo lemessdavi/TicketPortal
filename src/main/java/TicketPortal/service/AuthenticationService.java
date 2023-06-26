@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import TicketPortal.dao.UsuarioRepository;
-import TicketPortal.models.CustomUsuarioDetails;
 import TicketPortal.models.Usuario;
 
 @Service
@@ -22,6 +21,6 @@ public class AuthenticationService implements UserDetailsService {
         if(user == null) {
             throw new UsernameNotFoundException("User Not Found");
         }
-        return new CustomUsuarioDetails(user);
+        return user;
     }
 }

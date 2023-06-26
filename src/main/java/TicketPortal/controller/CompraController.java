@@ -10,6 +10,7 @@ import TicketPortal.models.Compra;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/compras")
 public class CompraController {
